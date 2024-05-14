@@ -1,0 +1,15 @@
+# Specify the Python version
+python_version >= "3.10.8"
+
+# Required packages
+openai==0.27.0
+transformers==4.29.0
+torch==2.0.1
+faiss-cpu==1.7.4
+PyMuPDF==1.22.3
+sentence-transformers==2.2.2
+sentencepiece==0.1.96
+cmake>=3.18.4
+Flask==2.0.1
+Flask-CORS>=3.0.0
+Werkzeug==2.2.2

@@ -1,0 +1,115 @@
+/* ChatApp.css */
+
+.chat-container {
+    margin: 25px 10px;
+    width: 100%;
+    max-width: 867px;
+  }
+
+.chat-app {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    height: 50vh;
+    border: 2px solid black;
+    box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .message-header {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    justify-content: start;
+    padding: 0.625em;
+    /* border: 2px solid black; */
+    font-weight: bold;
+    font-size: 1.5em;
+    background-color: #0F52A2;
+  }
+
+  .message-header-text {
+    padding-left: 0.625em;
+    font-weight: bold;
+    font-size: 1em;
+    color: white;
+  }
+
+  .message-header-text .subtext{
+    padding-left: 2px;
+    font-size: 0.6em;
+    font-weight: bol;
+    color: rgb(149, 241, 149);
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .message {
+    clear: both;
+    padding: 8px;
+    margin: 4px 0;
+  }
+  
+  .msg-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .msg-info-name {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  .msg-info-time {
+    font-size: 0.75em;
+  }
+
+  .Swetha {
+    text-align: left;
+    float: right;
+    background-color: #e5e5ea;
+    border-radius: 14px 14px 0 14px;
+    max-width: 50%;
+  }
+  
+  .Bot {
+    text-align: left;
+    float: left;
+    background-color: #c0e3f5;
+    border-radius: 14px 14px 14px 0;
+    max-width: 50%;
+  }
+
+  .chat-input {
+    display: flex;
+    align-items: center;
+    margin-top: 2em;
+    gap: 0.625em;
+  }
+
+  .chat-input input {
+    padding: 0.625em;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 1em;
+    flex-grow: 1;
+  }
+  
+  .chat-input button {
+    background-color: #0F52A2;
+    border: #0F52A2;
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.425em;
+  }
+  
