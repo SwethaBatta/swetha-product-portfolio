@@ -1,7 +1,7 @@
 import openai
 import torch
 import numpy as np
-from transformers import BartTokenizer, BartForConditionalGeneration
+from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer
 import faiss
 import fitz
@@ -12,18 +12,14 @@ class ChatBot:
         openai.api_key = api_key
 
         # Initialize BART tokenizer and model
-        self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
-        self.model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+        self.tokenizer = SentenceTransformer('all-MiniLM-L6-v2')
 
-        # Load a pre-trained model from sentence-transformers
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-
-        # Load and process PDF documents
-        pdf_paths = ["/Users/swethabatta/Desktop/openai-chatBot/openai_chatBotApp/data/FAQ.pdf", "/Users/swethabatta/Desktop/openai-chatBot/openai_chatBotApp/data/SwethaBattaTestDataDocForBills_AEP.pdf", "/Users/swethabatta/Desktop/openai-chatBot/openai_chatBotApp/data/SwethaBattaTestDataDocForBills_AT&T.pdf"]  # Add your PDF file paths here
-        
         # List to store document text
         self.documents = []
 
+        # Load and process pdf paths
+        pdf_paths = ["data/FAQ.pdf", "data/SwethaBattaTestDataDocForBills_AEP.pdf", "data/SwethaBattaTestDataDocForBills_AT&T.pdf"]
+        
         # Process each PDF file
         for pdf_path in pdf_paths:
             text = self.extract_text_from_pdf(pdf_path)
@@ -31,7 +27,7 @@ class ChatBot:
                 self.documents.append(text)
 
         # Encode and index the documents using FAISS
-        d = self.embedding_model.get_sentence_embedding_dimension()  # Dimension of the embeddings
+        d = self.tokenizer.get_sentence_embedding_dimension()  # Dimension of the embeddings
         self.index = faiss.IndexFlatL2(d)
 
         # Generate embeddings for each document
@@ -52,7 +48,7 @@ class ChatBot:
             return ""
 
     def embed_text(self, text):
-        return self.embedding_model.encode(text, convert_to_tensor=True).cpu().numpy()
+        return self.tokenizer.encode(text, convert_to_tensor=True).cpu().numpy()
 
     def query_knowledge_base(self, query):
         # Generate embeddings for the query
@@ -62,16 +58,17 @@ class ChatBot:
         # Retrieve the top documents
         retrieved_docs = [self.documents[i] for i in I[0]]
 
-        # Combine query with retrieved documents
-        inputs = self.tokenizer(retrieved_docs, return_tensors="pt", padding=True, truncation=True)
+        # Combine query with retrieved documents to form the context
+        context = "\n\n".join(retrieved_docs)
 
-        # Generate a response
-        with torch.no_grad():
-            output = self.model.generate(**inputs)
+        # Generate a response using OpenAI's API
+        response = openai.Completion.create(
+            engine="gpt-4-turbo",  # Use the appropriate model name
+            prompt=f"{context}\n\n{query}",
+            max_tokens=150
+        )
 
-        # Decode the response
-        response = self.tokenizer.decode(output[0], skip_special_tokens=True)
-        return response
+        return response.choices[0].text.strip()
 
     def send_prompt(self, query):
         response = self.query_knowledge_base(query)
